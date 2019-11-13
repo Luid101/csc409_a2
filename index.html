@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" 
+		crossorigin="anonymous"></script>
+		<script>
+
+			function saveURL(shortLink, longLink){
+				$.ajax({
+					url: 'http://localhost:4008/?short=' 
+							+ shortLink + "&" +"long="+ longLink,
+					type: 'PUT',
+					success: function(data, textStatus, xhr) {
+						showResult(xhr.status);
+					}, 
+					error: function(XMLHttpRequest, textStatus, errorThrown) {
+						showResult(500);
+					}
+				});     
+			}
+
+			function runPage(){
+
+				// reset info
+				$("#saved").css("display", "none");
+				$("#failed").css("display", "none");
+				
+				let short = document.getElementById("short").value;
+				let long = document.getElementById("long").value;
+				
+				saveURL(short, long);
+
+			}
+
+			function showResult(status){
+				if (status == 200){
+					$("#saved").css("display", "block");
+				}else{
+					$("#failed").css("display", "block");
+				}
+			} 
+
+		</script>
+		<style>
+			#saved {
+				display: none;
+				color: green;
+			}
+
+			#failed {
+				display: none;
+				color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Url Shortner</h1>
+
+		<input type="text" id="short" placeholder="short url here"/>
+
+		<input type="text" id="long" placeholder="long url here"/>
+
+		<button id="save" onclick="runPage()">SAVE</button>
+		<br>
+		<span id="saved">SAVED</span>
+		<br>
+		<span id="failed">FAILED</span>
+	
+	</body>
+</html>

@@ -86,13 +86,7 @@ public class ProxyWithClone {
       Pattern pStatus = Pattern.compile("^GET\\s+/(\\S+)\\s+(\\S+)$");
       Matcher mStatus = pStatus.matcher(line);
       if(mStatus.matches()){
-        //System.out.println("Matches Status"); 
-        //System.out.println("g1: '" + mStatus.group(1) + "'");
-
         if ( mStatus.group(1).equals("status") ){
-        
-          //System.out.println("Group is status");
-          //System.out.println("Found status page");
           arguments[0] = "status";
           return arguments;
         
@@ -136,10 +130,6 @@ public class ProxyWithClone {
 		return fileData;
 	}
 
-  /**
-   * runs a single-threaded proxy server on
-   * the specified local port. It never returns.
-   */
   public static void runServer(ArrayList<String> hosts)
       throws IOException {
     // Create a ServerSocket to listen for connections with
@@ -147,10 +137,6 @@ public class ProxyWithClone {
 
     final byte[] request = new byte[1024];
     byte[] reply = new byte[4096];
-    byte[] cloneReply = new byte[4096];
-
-    String host = "";
-    String cloneHost = "";
 
     boolean verbose = true;
 
@@ -196,6 +182,10 @@ public class ProxyWithClone {
           continue;
         }
 
+        Jedis jedis = new Jedis("redis", 6379);
+
+        jedis.set("key1", "some value");
+
         // Make a connection to the real server.
         // If we cannot connect to the server, send an error to the
         // client, disconnect, and continue waiting for connections.
@@ -203,23 +193,13 @@ public class ProxyWithClone {
           if (verbose) System.out.println("Trying to connect to " + host + ":" + remoteport);
           
           server = new Socket(host, remoteport);
-          
 
-          if (verbose) System.out.println("Connected to " + host + ":" + remoteport + "!");
           if (arguments[2].compareTo("PUT") == 0) {
-            //This is a PUT request, send url to the clone as well
-            if (verbose) System.out.println("This is a PUT request so Trying to connect to clone: " + cloneHost + ":" + CLONE_PORT);
+
             try{ 
 
-              cloneServer = new Socket(cloneHost, CLONE_PORT);
-              
-              if (verbose) System.out.println("Connected to " + cloneHost + ":" + CLONE_PORT + "!");
             }catch(IOException e){
-                System.out.println("Error connecting to clone: " + cloneHost + ":" + CLONE_PORT);
-                // put request
-                // main server works, but clone is offline, 
-                // so return back unavailable to client
-                // TODO: send proper page to client
+
                  file = new File(WEB_ROOT, OUT_OF_SERVICE);
                  fileLength = (int) file.length();
                  out.println("HTTP/1.1 404 Proxy server cannot connect to " + cloneHost + ":"

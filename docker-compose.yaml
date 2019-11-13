@@ -1,0 +1,21 @@
+version: "3.7"
+services:
+
+  webapp:
+    build: handler
+    ports:
+      - "4011:4011"
+    networks:
+      - net
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - net
+
+networks:
+  net:

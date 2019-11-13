@@ -25,5 +25,6 @@ EXPOSE 8086
 
 # Run python app.py when the container launches
 # This happens if no command is specified
+CMD java - jar jedis-2.1.0-sources.jar
 CMD ["java", "URLShortner"]
 

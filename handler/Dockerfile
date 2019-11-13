@@ -15,7 +15,7 @@ ADD . /app
 
 # Install any needed packages specified in requirements.txt
 # RUN during image build
-RUN java - jar jedis-2.1.0-sources.jar
+#RUN javac -cp jedis-2.1.0-sources.jar
 
 RUN javac URLShortner.java
 
@@ -28,5 +28,5 @@ EXPOSE 8086
 # Run python app.py when the container launches
 # This happens if no command is specified
 
-CMD ["java", "URLShortner"]
+CMD ["java", "-cp", "'.:jedis-2.1.0-sources.jar'", "URLShortner"]
 

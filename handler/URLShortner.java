@@ -19,6 +19,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// import jedis
+import redis.clients.jedis.Jedis;
+
 public class URLShortner { 
 	
 	static final File WEB_ROOT = new File(".");

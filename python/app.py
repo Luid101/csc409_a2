@@ -7,7 +7,9 @@ from flask import Flask, request, redirect
 app = Flask(__name__)
 cache = redis.Redis(host='redis', port=6379)
 
-postgres = psycopg2.connect(host="localhost",database="linktable", user="urlshortner", password="arnold")
+postgres = psycopg2.connect(host="url",port=5432, database="linktable", user="urlshortner", password="arnold")
+cur = postgres.cursor()
+cur.execute("CREATE TABLE IF NOT EXISTS linktable (shortURL text, longURL text);")
 
 
 def get_hit_count():
@@ -30,8 +32,18 @@ def save(short, longURL):
         retries -= 1
         time.sleep(0.5)
 
+    try:
+        cur.execute("INSERT INTO linktable (shortURL, longURL) VALUES (%s, %s)", (short, longURL))
+    except e:
+        print("PostgreSQL error")
+
+
 def get(short):
     try:
+        #cur.execute("SELECT * from linkTable")
+        cur.execute("SELECT longURL from linkTable WHERE shortURL = %s", (short,))
+        long = cur.fetchone()[0]
+        return long
         return cache.get(short)
     except redis.exceptions.ConnectionError as exc:
         if retries == 0:

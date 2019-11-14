@@ -4,12 +4,15 @@ services:
     build: .
     ports:
       - "5000:5000"
+    depends_on:
+      - postgres
   redis:
     image: "redis:alpine"
     ports:
       - 6379:6379
   postgres:
     image: postgres:9.6.2-alpine
+    container_name: "url"
     ports:
       - 5432:5432
     environment:

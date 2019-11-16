@@ -1,0 +1,14 @@
+def handle(req):
+    #from BeautifulSoup import BeautifulSoup
+    #import urllib2
+    #import re
+
+    links = []
+    html_page = urllib3.urlopen(req)
+    soup = BeautifulSoup(html_page)
+    for link in soup.findAll('a', attrs={'href': re.compile("^http://")}):
+        #print link.get('href')
+        links.append(link)
+
+    return link
+

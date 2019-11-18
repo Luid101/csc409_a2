@@ -1,0 +1,11 @@
+1. URL shortener with Docker
+    - We could add more replicas of our URLShortner to distribute the load across multiple machines.
+    - We could add more Redis containers on other systems to take advantage of more RAM.
+    - To scale the application beyond the capacity of the cache we could store all URLs in the PostgreSQL server and in Redis only the most recently accessed
+    to improve performance. 
+
+2. MD5 breaker with Spark and Scala
+    It takes one machine 3m20s to find a pre-image of length 8, which requires 10^7 hashes. That equals to 50,000 hashes per second. 
+    20 lab machines could perform 50k * 20 = 1M hash/s. To find pre-image of length 15, our 20 lab machines would take 10^14 / 10^6 = 10^8s ~ 27,700h ~ ~ 3.15years
+
+3. Link extractor that creates a graph of links for a specified URL

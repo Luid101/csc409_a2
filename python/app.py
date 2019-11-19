@@ -9,6 +9,7 @@ cache = redis.Redis(host='redis', port=6379)
 
 postgres = psycopg2.connect(host="url",port=5432, database="linktable", user="urlshortner", password="arnold")
 cur = postgres.cursor()
+postgres.autocommit = True
 cur.execute("CREATE TABLE IF NOT EXISTS linktable (shortURL text PRIMARY KEY, longURL text);")
 
 
@@ -29,7 +30,7 @@ def save(short, longURL):
     except:
         print("Redis write error")
     try:
-        cur.execute("INSERT INTO linktable (shortURL, longURL) VALUES (%s, %s)", (short, longURL))
+        cur.execute("INSERT INTO linktable (shortURL, longURL) VALUES (%s, %s) ON CONFLICT (shortURL) DO UPDATE SET longURL = excluded.longURL", (short, longURL))
     except:
         print("PostgreSQL write error")
 

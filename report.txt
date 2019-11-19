@@ -8,4 +8,7 @@
     It takes one machine 3m20s to find a pre-image of length 8, which requires 10^7 hashes. That equals to 50,000 hashes per second. 
     20 lab machines could perform 50k * 20 = 1M hash/s. To find pre-image of length 15, our 20 lab machines would take 10^14 / 10^6 = 10^8s ~ 27,700h ~ ~ 3.15years
 
-3. Link extractor that creates a graph of links for a specified URL
+3. We created a link extractor that creates a graph of links for a specified URL by having two openfaas functions communicating with each other. We have one openfaas function hosted on a container, called getlinks,
+where it will be given a link in a request body, and return a list of urls that are on the page of the given link by parsing the html code. The main openfaas function, called getgraph,
+will be getting a JSON request body , that will be returning an adjency list of links starting from the link we give in the request body. In the request body, we give it
+a url and a number to represent how many nodes we want in our graph, and getgraph calls getlinks asynchronously to generate the graph. 

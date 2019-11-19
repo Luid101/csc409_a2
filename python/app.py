@@ -13,16 +13,6 @@ postgres.autocommit = True
 cur.execute("CREATE TABLE IF NOT EXISTS linktable (shortURL text PRIMARY KEY, longURL text);")
 
 
-def get_hit_count():
-    retries = 5
-    while True:
-        try:
-            return cache.incr('hits')
-        except redis.exceptions.ConnectionError as exc:
-            if retries == 0:
-                raise exc
-            retries -= 1
-            time.sleep(0.5)
 
 def save(short, longURL):
     try:

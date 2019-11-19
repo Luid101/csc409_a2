@@ -13,6 +13,8 @@ services:
   postgres:
     image: postgres:9.6.2-alpine
     container_name: "url"
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     environment:
